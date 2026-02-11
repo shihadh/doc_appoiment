@@ -1,0 +1,17 @@
+﻿Analyzing doc_appoinment...                                     
+
+   info - The file name 'api_Interceptor.dart' isn't a lower_case_with_underscores identifier - lib\core\service\api_Interceptor.dart:1:1 - file_names
+   info - Don't use 'BuildContext's across async gaps - lib\features\auth\view\login.dart:142:43 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps - lib\features\auth\view\login.dart:150:43 - use_build_context_synchronously
+warning - Unused import: 'dart:io' - lib\features\bookingForm\pdf\pdf_service.dart:1:8 - unused_import
+warning - Unused import: '../model/branch_treatment_model.dart' - lib\features\bookingForm\pdf\pdf_service.dart:5:8 - unused_import
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\bookingForm\view\registration_screen.dart:104:23 - deprecated_member_use
+   info - Unnecessary use of 'toList' in a spread - lib\features\bookingForm\view\registration_screen.dart:157:24 - unnecessary_to_list_in_spreads
+   info - 'groupValue' is deprecated and shouldn't be used. Use a RadioGroup ancestor to manage group value instead. This feature was deprecated after v3.32.0-0.0.pre - lib\features\bookingForm\view\registration_screen.dart:296:9 - deprecated_member_use
+   info - 'onChanged' is deprecated and shouldn't be used. Use RadioGroup to handle value change instead. This feature was deprecated after v3.32.0-0.0.pre - lib\features\bookingForm\view\registration_screen.dart:297:9 - deprecated_member_use
+   info - Don't use 'BuildContext's across async gaps - lib\features\bookingForm\view\registration_screen.dart:354:30 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps - lib\features\bookingForm\view\registration_screen.dart:357:23 - use_build_context_synchronously
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\bookingForm\widgets\treatment_dialog.dart:32:15 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\login\view\login_screen.dart:60:35 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\splash\view\splash_screen.dart:38:33 - deprecated_member_use
+
