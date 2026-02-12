@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import '../model/branch_treatment_model.dart';
 import '../service/registration_service.dart';
@@ -26,9 +28,28 @@ class RegistrationController with ChangeNotifier {
   bool get isLoading => _isLoading;
 
   // Selected Data
-  BranchModel? selectedBranch;
-  DateTime selectedDate = DateTime.now();
-  TimeOfDay selectedTime = TimeOfDay.now();
+  BranchModel? _selectedBranch;
+  DateTime _selectedDate = DateTime.now();
+  TimeOfDay _selectedTime = TimeOfDay.now();
+
+  BranchModel? get selectedBranch => _selectedBranch;
+  DateTime get selectedDate => _selectedDate;
+  TimeOfDay get selectedTime => _selectedTime;
+
+  set selectedBranch(BranchModel? val) {
+    _selectedBranch = val;
+    notifyListeners();
+  }
+
+  set selectedDate(DateTime val) {
+    _selectedDate = val;
+    notifyListeners();
+  }
+
+  set selectedTime(TimeOfDay val) {
+    _selectedTime = val;
+    notifyListeners();
+  }
 
   // Selected treatments list for the patient
   // Format: {treatmentId: {male: count, female: count}}
@@ -53,6 +74,7 @@ class RegistrationController with ChangeNotifier {
     double advance = double.tryParse(advanceController.text) ?? 0;
     double balance = total - discount - advance;
     balanceController.text = balance.toStringAsFixed(2);
+    notifyListeners();
   }
 
   Future<void> init() async {
@@ -109,10 +131,11 @@ class RegistrationController with ChangeNotifier {
       'payment': paymentController.text,
       'phone': phoneController.text,
       'address': addressController.text,
-      'total_amount': double.tryParse(totalController.text) ?? 0,
-      'discount_amount': double.tryParse(discountController.text) ?? 0,
-      'advance_amount': double.tryParse(advanceController.text) ?? 0,
-      'balance_amount': double.tryParse(balanceController.text) ?? 0,
+      'total_amount': (double.tryParse(totalController.text) ?? 0).toInt(),
+      'discount_amount': (double.tryParse(discountController.text) ?? 0)
+          .toInt(),
+      'advance_amount': (double.tryParse(advanceController.text) ?? 0).toInt(),
+      'balance_amount': (double.tryParse(balanceController.text) ?? 0).toInt(),
       'date_nd_time':
           '${selectedDate.day.toString().padLeft(2, '0')}/${selectedDate.month.toString().padLeft(2, '0')}/${selectedDate.year}-${selectedTime.hourOfPeriod.toString().padLeft(2, '0')}:${selectedTime.minute.toString().padLeft(2, '0')} ${selectedTime.period == DayPeriod.am ? 'AM' : 'PM'}',
       'id': '',
@@ -121,12 +144,29 @@ class RegistrationController with ChangeNotifier {
       'branch': selectedBranch?.id.toString() ?? '',
       'treatments': treatmentIds,
     };
-
+    log('Submitting registration with data: $data');
     final (success, _) = await _service.registerPatient(data);
 
     _isLoading = false;
     notifyListeners();
     return success;
+  }
+
+  void clearData() {
+    nameController.clear();
+    phoneController.clear();
+    addressController.clear();
+    executiveController.clear();
+    paymentController.text = 'Cash';
+    totalController.clear();
+    discountController.clear();
+    advanceController.clear();
+    balanceController.clear();
+    _selectedBranch = null;
+    _selectedDate = DateTime.now();
+    _selectedTime = TimeOfDay.now();
+    _selectedTreatments.clear();
+    notifyListeners();
   }
 
   @override

@@ -1,11 +1,12 @@
 import 'package:dio/dio.dart';
+import 'package:doc_appoinment/core/config/app_config.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../constants/api_constants.dart';
 
 class DioClient {
   final Dio _dio = Dio(
     BaseOptions(
-      baseUrl: ApiConstants.baseUrl,
+      baseUrl: AppConfig.baseUrl,
       connectTimeout: const Duration(seconds: 20),
       receiveTimeout: const Duration(seconds: 20),
     ),
@@ -24,7 +25,7 @@ class DioClient {
           return handler.next(options);
         },
         onError: (DioException e, handler) {
-          // Handle global errors here
+          // Handle global errors
           return handler.next(e);
         },
       ),

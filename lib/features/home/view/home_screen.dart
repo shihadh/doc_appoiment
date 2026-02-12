@@ -114,7 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
               const Divider(),
               Expanded(
                 child: controller.isLoading && controller.patients.isEmpty
-                    ? const Center(child: CircularProgressIndicator())
+                    ? const Center(child: CircularProgressIndicator(color: AppTheme.primaryColor,))
                     : controller.error != null && controller.patients.isEmpty
                     ? Center(
                         child: Column(
@@ -149,6 +149,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       )
                     : RefreshIndicator(
+                      backgroundColor: AppTheme.secondaryColor,
+                      color: AppTheme.primaryColor,
                         onRefresh: () =>
                             context.read<HomeController>().fetchPatients(),
                         child: ListView.builder(

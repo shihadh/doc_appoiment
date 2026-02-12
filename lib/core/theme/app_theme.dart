@@ -8,6 +8,8 @@ class AppTheme {
   static const Color errorColor = Colors.red;
   static const Color redColor = Colors.red; // Explicitly asked for this
   static const Color cardColor = Color(0xFFF1F1F1);
+  static const Color black = Colors.black;
+  static const Color linkColor = Colors.blueAccent;
 
   static const Color inputFillColor = Color(0x40D9D9D9);
 

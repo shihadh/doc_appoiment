@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:doc_appoinment/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../core/constants/text_const.dart';
@@ -56,8 +57,8 @@ class LoginScreen extends StatelessWidget {
                         child: BackdropFilter(
                           filter: ImageFilter.blur(sigmaX: 7, sigmaY: 7),
                           child: Container(
-                            color: Colors.black.withOpacity(
-                              0.4,
+                            color: AppTheme.black.withValues(
+                             alpha:  0.4,
                             ), // dark tint for readability
                           ),
                         ),
@@ -75,8 +76,8 @@ class LoginScreen extends StatelessWidget {
                 child: Container(
                   height: MediaQuery.of(context).size.height * 0.75,
                   padding: const EdgeInsets.all(24),
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
+                  decoration: BoxDecoration(
+                    color: AppTheme.secondaryColor,
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(30),
                       topRight: Radius.circular(30),
@@ -129,10 +130,15 @@ class LoginScreen extends StatelessWidget {
                                     ? null
                                     : () => _handleLogin(context),
                                 child: controller.isLoading
-                                    ? const CircularProgressIndicator(
-                                        color: Colors.white,
-                                      )
-                                    : Text(TextConst.login['button']!),
+                                    ? SizedBox(
+                                      height: 20,
+                                      width: 20,
+                                      child: const CircularProgressIndicator(
+                                          color: AppTheme.secondaryColor,
+                                          strokeWidth: 3,
+                                        ),
+                                    )
+                                    : Text(TextConst.login['button']!,style: const TextStyle(color: AppTheme.secondaryColor),),
                               ),
                             ),
                             const SizedBox(height: 30),
@@ -148,7 +154,7 @@ class LoginScreen extends StatelessWidget {
                                     TextSpan(
                                       text: 'Terms of Service',
                                       style: TextStyle(
-                                        color: Theme.of(context).primaryColor,
+                                        color: AppTheme.linkColor,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
@@ -156,7 +162,7 @@ class LoginScreen extends StatelessWidget {
                                     TextSpan(
                                       text: 'Privacy Policy',
                                       style: TextStyle(
-                                        color: Theme.of(context).primaryColor,
+                                        color: AppTheme.linkColor,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),

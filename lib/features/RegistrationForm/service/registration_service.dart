@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import '../../../core/network/dio_client.dart';
 import '../../../core/constants/api_constants.dart';
@@ -37,6 +39,7 @@ class RegistrationService {
   Future<(bool, String?)> registerPatient(Map<String, dynamic> data) async {
     try {
       final formData = FormData.fromMap(data);
+      log(  'FormData for registration: ${formData.fields} and files: ${formData.files}');
       final response = await _dioClient.dio.post(
         ApiConstants.patientUpdate,
         data: formData,

@@ -55,6 +55,7 @@ class _TreatmentDialogState extends State<TreatmentDialog> {
                   const SizedBox(height: 10),
                   DropdownButtonFormField<TreatmentModel>(
                     isExpanded: true,
+                    dropdownColor: AppTheme.secondaryColor,
                     value: selectedTreatment,
                     items: controller.treatments.map((t) {
                       return DropdownMenuItem(value: t, child: Text(t.name));
@@ -63,6 +64,7 @@ class _TreatmentDialogState extends State<TreatmentDialog> {
                     decoration: const InputDecoration(
                       hintText: 'Choose preferred treatment',
                       fillColor: Color(0xFFF1F1F1),
+                      filled: true,
                     ),
                   ),
                   const SizedBox(height: 20),

@@ -5,6 +5,10 @@ import 'package:intl/intl.dart';
 import '../controller/registration_controller.dart';
 import '../model/branch_treatment_model.dart';
 import '../widgets/treatment_dialog.dart';
+import '../widgets/treatment_card.dart';
+import '../widgets/payment_option.dart';
+import '../widgets/custom_label.dart';
+import '../widgets/custom_text_field.dart';
 import '../pdf/pdf_service.dart';
 
 class RegistrationScreen extends StatelessWidget {
@@ -51,7 +55,11 @@ class _RegistrationScreenBodyState extends State<_RegistrationScreenBody> {
             title: const Text('Register Patient'),
           ),
           body: controller.isLoading && controller.branches.isEmpty
-              ? const Center(child: CircularProgressIndicator())
+              ? const Center(
+                  child: CircularProgressIndicator(
+                    color: AppTheme.primaryColor,
+                  ),
+                )
               : SingleChildScrollView(
                   padding: const EdgeInsets.all(16),
                   child: Form(
@@ -59,36 +67,30 @@ class _RegistrationScreenBodyState extends State<_RegistrationScreenBody> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildLabel('Patient Name'),
-                        TextFormField(
+                        const CustomLabel(text: 'Patient Name'),
+                        CustomTextField(
                           controller: controller.nameController,
-                          decoration: const InputDecoration(
-                            hintText: 'Enter patient full name',
-                          ),
+                          hintText: 'Enter patient full name',
                           validator: (v) => v!.isEmpty ? 'Required' : null,
                         ),
                         const SizedBox(height: 16),
-                        _buildLabel('WhatsApp Number'),
-                        TextFormField(
+                        const CustomLabel(text: 'WhatsApp Number'),
+                        CustomTextField(
                           controller: controller.phoneController,
                           keyboardType: TextInputType.phone,
-                          decoration: const InputDecoration(
-                            hintText: 'Enter WhatsApp number',
-                          ),
+                          hintText: 'Enter WhatsApp number',
                           validator: (v) => v!.isEmpty ? 'Required' : null,
                         ),
                         const SizedBox(height: 16),
-                        _buildLabel('Full Address'),
-                        TextFormField(
+                        const CustomLabel(text: 'Full Address'),
+                        CustomTextField(
                           controller: controller.addressController,
                           maxLines: 3,
-                          decoration: const InputDecoration(
-                            hintText: 'Enter full address',
-                          ),
+                          hintText: 'Enter full address',
                           validator: (v) => v!.isEmpty ? 'Required' : null,
                         ),
                         const SizedBox(height: 16),
-                        _buildLabel('Branch'),
+                        const CustomLabel(text: 'Branch'),
                         DropdownButtonFormField<BranchModel>(
                           dropdownColor: AppTheme.secondaryColor,
                           initialValue: controller.selectedBranch,
@@ -109,7 +111,7 @@ class _RegistrationScreenBodyState extends State<_RegistrationScreenBody> {
                           validator: (v) => v == null ? 'Required' : null,
                         ),
                         const SizedBox(height: 16),
-                        _buildLabel('Treatments'),
+                        const CustomLabel(text: 'Treatments'),
                         ...controller.selectedTreatments.entries
                             .toList()
                             .asMap()
@@ -120,11 +122,10 @@ class _RegistrationScreenBodyState extends State<_RegistrationScreenBody> {
                               final t = controller.treatments.firstWhere(
                                 (element) => element.id == entry.key,
                               );
-                              return _buildTreatmentCard(
-                                index,
-                                t,
-                                entry.value,
-                                controller,
+                              return TreatmentCard(
+                                index: index,
+                                treatment: t,
+                                counts: entry.value,
                               );
                             })
                             .toList(),
@@ -142,8 +143,9 @@ class _RegistrationScreenBodyState extends State<_RegistrationScreenBody> {
                                   .calculateTotals();
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: AppTheme.primaryColor
-                                  .withValues(alpha: 0.2),
+                              backgroundColor: AppTheme.primaryColor.withValues(
+                                alpha: 0.2,
+                              ),
                               foregroundColor: Colors.black87,
                               elevation: 0,
                               padding: const EdgeInsets.symmetric(vertical: 14),
@@ -165,58 +167,58 @@ class _RegistrationScreenBodyState extends State<_RegistrationScreenBody> {
                           ),
                         ),
                         const SizedBox(height: 16),
-                        _buildLabel('Total Amount'),
-                        TextFormField(
+                        const CustomLabel(text: 'Total Amount'),
+                        CustomTextField(
                           controller: controller.totalController,
                           readOnly: true,
-                          decoration: const InputDecoration(hintText: '0.00'),
+                          hintText: '0.00',
                         ),
                         const SizedBox(height: 16),
-                        _buildLabel('Discount Amount'),
-                        TextFormField(
+                        const CustomLabel(text: 'Discount Amount'),
+                        CustomTextField(
                           controller: controller.discountController,
                           keyboardType: TextInputType.number,
-                          onChanged: (_) => context
-                              .read<RegistrationController>()
-                              .updateBalance(),
-                          decoration: const InputDecoration(hintText: '0.00'),
+                          onChanged: (_) => controller.updateBalance(),
+                          hintText: '0.00',
                         ),
                         const SizedBox(height: 16),
-                        _buildLabel('Payment Method'),
+                        const CustomLabel(text: 'Payment Method'),
                         Row(
                           children: [
-                            _buildPaymentOption('Cash', controller),
-                            _buildPaymentOption('Card', controller),
-                            _buildPaymentOption('UPI', controller),
+                            PaymentOption(
+                              value: 'Cash',
+                              controller: controller,
+                            ),
+                            PaymentOption(
+                              value: 'Card',
+                              controller: controller,
+                            ),
+                            PaymentOption(value: 'UPI', controller: controller),
                           ],
                         ),
                         const SizedBox(height: 24),
-                        _buildLabel('Advance Amount'),
-                        TextFormField(
+                        const CustomLabel(text: 'Advance Amount'),
+                        CustomTextField(
                           controller: controller.advanceController,
                           keyboardType: TextInputType.number,
-                          onChanged: (_) => context
-                              .read<RegistrationController>()
-                              .updateBalance(),
-                          decoration: const InputDecoration(hintText: '0.00'),
+                          onChanged: (_) => controller.updateBalance(),
+                          hintText: '0.00',
                         ),
                         const SizedBox(height: 16),
-                        _buildLabel('Balance Amount'),
-                        TextFormField(
+                        const CustomLabel(text: 'Balance Amount'),
+                        CustomTextField(
                           controller: controller.balanceController,
                           readOnly: true,
-                          decoration: const InputDecoration(hintText: '0.00'),
+                          hintText: '0.00',
                         ),
                         const SizedBox(height: 16),
-                        _buildLabel('Executive'),
-                        TextFormField(
+                        const CustomLabel(text: 'Executive'),
+                        CustomTextField(
                           controller: controller.executiveController,
-                          decoration: const InputDecoration(
-                            hintText: 'Enter executive name',
-                          ),
+                          hintText: 'Enter executive name',
                         ),
                         const SizedBox(height: 16),
-                        _buildLabel('Booking Date'),
+                        const CustomLabel(text: 'Booking Date'),
                         InkWell(
                           onTap: () async {
                             final date = await showDatePicker(
@@ -228,10 +230,7 @@ class _RegistrationScreenBodyState extends State<_RegistrationScreenBody> {
                               ),
                             );
                             if (date != null) {
-                              context
-                                      .read<RegistrationController>()
-                                      .selectedDate =
-                                  date;
+                              controller.selectedDate = date;
                             }
                           },
                           child: InputDecorator(
@@ -249,7 +248,7 @@ class _RegistrationScreenBodyState extends State<_RegistrationScreenBody> {
                           ),
                         ),
                         const SizedBox(height: 16),
-                        _buildLabel('Booking Time'),
+                        const CustomLabel(text: 'Booking Time'),
                         InkWell(
                           onTap: () async {
                             final time = await showTimePicker(
@@ -257,10 +256,7 @@ class _RegistrationScreenBodyState extends State<_RegistrationScreenBody> {
                               initialTime: controller.selectedTime,
                             );
                             if (time != null) {
-                              context
-                                      .read<RegistrationController>()
-                                      .selectedTime =
-                                  time;
+                              controller.selectedTime = time;
                             }
                           },
                           child: InputDecorator(
@@ -283,8 +279,13 @@ class _RegistrationScreenBodyState extends State<_RegistrationScreenBody> {
                                 ? null
                                 : () => _handleSubmit(context),
                             child: controller.isLoading
-                                ? const CircularProgressIndicator(
-                                    color: Colors.white,
+                                ? SizedBox(
+                                    height: 20,
+                                    width: 20,
+                                    child: const CircularProgressIndicator(
+                                      color: Colors.white,
+                                      strokeWidth: 3,
+                                    ),
                                   )
                                 : const Text('Save'),
                           ),
@@ -296,157 +297,6 @@ class _RegistrationScreenBodyState extends State<_RegistrationScreenBody> {
                 ),
         );
       },
-    );
-  }
-
-  Widget _buildLabel(String text) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
-      child: Text(text, style: const TextStyle(fontWeight: FontWeight.bold)),
-    );
-  }
-
-  Widget _buildPaymentOption(String value, RegistrationController controller) {
-    return Expanded(
-      child: RadioListTile<String>(
-        title: Text(value),
-        value: value,
-        groupValue: controller.paymentController.text,
-        onChanged: (val) {
-          if (val != null) {
-            setState(
-              () =>
-                  context
-                          .read<RegistrationController>()
-                          .paymentController
-                          .text =
-                      val,
-            );
-          }
-        },
-        contentPadding: EdgeInsets.zero,
-      ),
-    );
-  }
-
-  Widget _buildTreatmentCard(
-    int index,
-    TreatmentModel treatment,
-    Map<String, int> counts,
-    RegistrationController controller,
-  ) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF1F1F1),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Text(
-                '$index. ',
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-              ),
-              Expanded(
-                child: Text(
-                  treatment.name,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  context.read<RegistrationController>().removeTreatment(
-                    treatment.id,
-                  );
-                  context.read<RegistrationController>().calculateTotals();
-                },
-                child: CircleAvatar(
-                  radius: 12,
-                  backgroundColor: Colors.red.withValues(alpha:  0.4),
-                  child: const Icon(Icons.close, color: Colors.white, size: 16),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 10),
-          Row(
-            children: [
-              const SizedBox(width: 25),
-              const Text(
-                'Male',
-                style: TextStyle(
-                  color: AppTheme.primaryColor,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              const SizedBox(width: 8),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 4,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.5),
-                  border: Border.all(color: const Color(0xFFD1D5DB)),
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: Text('${counts['male']}'),
-              ),
-              const SizedBox(width: 20),
-              const Text(
-                'Female',
-                style: TextStyle(
-                  color: AppTheme.primaryColor,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              const SizedBox(width: 8),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 4,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.5),
-                  border: Border.all(color: const Color(0xFFD1D5DB)),
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: Text('${counts['female']}'),
-              ),
-              const Spacer(),
-              GestureDetector(
-                onTap: () async {
-                  await showDialog(
-                    context: context,
-                    builder: (_) => TreatmentDialog(
-                      initialTreatment: treatment,
-                      initialMale: counts['male']!,
-                      initialFemale: counts['female']!,
-                    ),
-                  );
-                  context.read<RegistrationController>().calculateTotals();
-                },
-                child: const Icon(
-                  Icons.edit,
-                  color: AppTheme.primaryColor,
-                  size: 20,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
     );
   }
 
@@ -482,8 +332,12 @@ class _RegistrationScreenBodyState extends State<_RegistrationScreenBody> {
           address: controller.addressController.text,
           branch: controller.selectedBranch?.name ?? '',
           bookingDate: DateFormat(
-            'dd/MM/yyyy - hh:mm a',
+            'dd/MM/yyyy | hh:mm a',
           ).format(DateTime.now()),
+          treatmentDate: DateFormat(
+            'dd/MM/yyyy',
+          ).format(controller.selectedDate),
+          treatmentTime: controller.selectedTime.format(context),
           treatments: treatmentsList,
           total: double.tryParse(controller.totalController.text) ?? 0,
           discount: double.tryParse(controller.discountController.text) ?? 0,
@@ -495,6 +349,7 @@ class _RegistrationScreenBodyState extends State<_RegistrationScreenBody> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Registration Successful')),
         );
+        controller.clearData();
         Navigator.pop(context);
       } else if (mounted) {
         ScaffoldMessenger.of(
